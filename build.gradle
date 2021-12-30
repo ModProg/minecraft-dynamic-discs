@@ -12,7 +12,7 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
-minecraft {
+loom {
 }
 
 
@@ -22,7 +22,7 @@ configurations {
 }
 
 repositories {
-    maven { url = "http://maven.fabricmc.net/" }
+    maven { url = "https://maven.fabricmc.net/" }
     maven { url = "https://jitpack.io" }
 }
 
@@ -35,14 +35,22 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
-    shade("com.github.zakgof:velvet-video:0.5.1") {
+    modImplementation ("com.github.zakgof:velvet-video:0.5.2") {
         exclude module: "guava"
         exclude group: "org.ow2.asm"
+        exclude group: "com.github.jnr"
     }
-    shade "com.github.zakgof:velvet-video-natives:0.2.7.full"
+    modImplementation "com.github.zakgof:velvet-video-natives:0.2.8.full"
+    include ("com.github.zakgof:velvet-video:0.5.2") {
+        exclude module: "guava"
+        exclude group: "org.ow2.asm"
+        exclude group: "com.github.jnr"
+    }
+    include "com.github.zakgof:velvet-video-natives:0.2.8.full"
 }
 
 processResources {
+    duplicatesStrategy 'warn'
     inputs.property "version", project.version
 
     from(sourceSets.main.resources.srcDirs) {
